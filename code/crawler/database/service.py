@@ -70,7 +70,7 @@ class RawService:
                 )
             )
             self.db.commit()
-            logger.debug(f"✅ Cập nhật hoàn tất ID {item_id} (PDF: {has_pdf})")
+            # logger.debug(f"✅ Cập nhật hoàn tất ID {item_id} (PDF: {has_pdf})")
         except Exception as e:
             logger.error(f"Lỗi cập nhật kết quả cho ID {item_id}: {e}")
             self.db.rollback()

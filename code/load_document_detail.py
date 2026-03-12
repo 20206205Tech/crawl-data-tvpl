@@ -43,8 +43,11 @@ def main():
                     db_service = RawService(db_session)
                     db_service.mark_details_completed(item_id, has_pdf=has_pdf)
 
-                logger.success(
-                    f"✔️ Hoàn tất xử lý ID: {item_id} (Has PDF: {has_pdf})")
+                if has_pdf:
+                    logger.success(
+                        f"✔️ Hoàn tất xử lý ID: {item_id} (Có PDF)")
+                # logger.success(
+                #     f"✔️ Hoàn tất xử lý ID: {item_id} (Has PDF: {has_pdf})")
 
     except Exception as e:
         logger.critical(f"Lỗi quy trình load dữ liệu: {e}")
