@@ -1,0 +1,58 @@
+name: document_detail_trigger
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [document_detail_trigger]
+  # workflow_run:
+  #   workflows: ["document_list_trigger"]
+  #   types:
+  #     - completed
+
+jobs:
+  extract-and-load:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Cache Scrapy HTTP Cache
+        uses: actions/cache@v4
+        with:
+          path: code/.scrapy
+          key: ${{ runner.os }}-scrapy-cache-${{ github.workflow }}
+          restore-keys: |
+            ${{ runner.os }}-scrapy-cache-
+
+
+
+
+      - name: Extract
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          cd code
+          doppler run -p 20206205tech -c prd -- uv run python extract_document_detail.py
+
+      - name: Load
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: |
+          cd code
+          doppler run -p 20206205tech -c prd -- uv run python load_document_detail.py
