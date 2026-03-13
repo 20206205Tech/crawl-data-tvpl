@@ -17,7 +17,7 @@ def get_drive_service():
     token_json = os.getenv('GOOGLE_DRIVE_TOKEN')
 
     if token_json:
-        logger.info("Đang sử dụng Token từ GitHub Secrets...")
+        logger.info("Đang sử dụng Token từ Secrets...")
         creds_info = json.loads(token_json)
         creds = Credentials.from_authorized_user_info(creds_info, SCOPES)
 
